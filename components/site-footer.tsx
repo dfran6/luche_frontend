@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { Camera, Music2, X, MessageCircle, Mail, MapPin } from 'lucide-react'
+import { Camera, Music2, X, MessageCircle, Mail, MapPin,  CalendarRange } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { whatsappServiceUrl } from '@/lib/whatsapp'
 
@@ -38,21 +38,24 @@ export function SiteFooter() {
               <MessageCircle className="size-4 transition-transform group-hover:scale-110" />
             </a>
             <a
-              href="instagram/luche.hair"
+              href="https://www.instagram.com/luche.hair"
+              target="_blank"
+              rel="noreferrer"
               aria-label="Instagram"
               className="group flex size-10 items-center justify-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-primary"
             >
               <Camera className="size-4 transition-transform group-hover:scale-110" />
             </a>
+              {/* <a
+                href="https://twitter.com/luche.hair"
+                target="_blank"
+                aria-label="X"
+                className="group flex size-10 items-center justify-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-primary"
+              >
+                <X className="size-4 transition-transform group-hover:scale-110" />
+              </a> */}
             <a
-              href="x/luche.hair"
-              aria-label="X"
-              className="group flex size-10 items-center justify-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-primary"
-            >
-              <X className="size-4 transition-transform group-hover:scale-110" />
-            </a>
-            <a
-              href="tt/luchehair"
+              href="https://www.tiktok.com/@luchehair"
               aria-label="TikTok"
               className="group flex size-10 items-center justify-center rounded-full border border-primary-foreground/25 text-primary-foreground/80 transition-all hover:-translate-y-0.5 hover:border-gold hover:bg-gold hover:text-primary"
             >
@@ -92,18 +95,21 @@ export function SiteFooter() {
           <ul className="mt-4 space-y-3 text-sm text-primary-foreground/70">
             <li className="flex gap-2">
               <MapPin className="mt-0.5 size-4 shrink-0 text-gold" />
-              <span>128 Studio Lane, Toronto, ON</span>
+              <span>Nova Scotia, Canada</span>
             </li>
             <li className="flex gap-2">
               <Mail className="mt-0.5 size-4 shrink-0 text-gold" />
-              <a href="mailto:hello@luche.studio" className="hover:text-gold">
-                hello@luche.studio
+              <a href="mailto:hello@luchehair.com" className="hover:text-gold">
+                hello@luchehair.com
               </a>
             </li>
+            <li className="flex gap-2">
+            <CalendarRange className="mt-0.5 size-4 shrink-0 text-gold" />
+            <span>
+              Tue–Sat · 9am – 6pm
+            </span>
+            </li>
           </ul>
-          <p className="mt-4 text-sm text-primary-foreground/70">
-            Tue–Sat · 9am – 6pm
-          </p>
         </div>
       </div>
 

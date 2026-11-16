@@ -44,7 +44,7 @@ export function Hero() {
             <Button
               render={<Link href="/shop" />}
               size="lg"
-              className="rounded-full px-5 shadow-sm shadow-primary/10 hover:-translate-y-0.5 hover:shadow-md"
+              className="rounded-full py-6 px-5 shadow-sm shadow-primary/10 hover:-translate-y-0.5 hover:shadow-md"
             >
               Shop the collection
               <ArrowRight className="size-4 transition-transform group-hover/button:translate-x-0.5" />
@@ -53,7 +53,7 @@ export function Hero() {
               render={<Link href="/booking" />}
               size="lg"
               variant="outline"
-              className="rounded-full border-primary/20 bg-secondary/45 px-5 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 hover:border-accent hover:bg-secondary/70"
+              className="rounded-full py-6 border-primary/20 bg-secondary/45 px-5 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 hover:border-accent hover:bg-secondary/70"
             >
               Book an appointment
             </Button>
