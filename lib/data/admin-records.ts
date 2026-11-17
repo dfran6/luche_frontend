@@ -15,8 +15,33 @@ async function getAdminList(path: string, key: string) {
   return records.concat(...pages)
 }
 
+/**
+ * Total earned from appointments marked completed, using each appointment's
+ * listed service price. Cancelled, requested and confirmed bookings are excluded.
+ */
+export function summariseCompletedAppointments(appointments: any[]) {
+  const completed = appointments.filter((a) => a.status === 'completed')
+  const totalCents = completed.reduce((sum, a) => sum + Math.round(Number(a.service_price ?? 0) * 100), 0)
+  return { count: completed.length, totalCents }
+}
+
 export function getAdminOrders() {
   return getAdminList('/orders', 'orders')
+}
+
+export async function getAdminDashboardSummary() {
+  const token = (await cookies()).get('luche-admin-access')?.value
+  if (!token) return null
+  try {
+    const response = await fetch(`${API}/reports/admin/dashboard`, {
+      cache: 'no-store',
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!response.ok) return null
+    return await response.json()
+  } catch {
+    return null
+  }
 }
 
 export function getAdminAppointments() {

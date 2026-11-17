@@ -1,85 +1,55 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { Sparkle } from '@/components/brand/sparkle'
+import { HeroMedallion } from '@/components/home/hero-medallion'
+import { SYDNEY_FLAT_FEE_LABEL } from '@/lib/delivery'
 
 export function Hero() {
   return (
-    <section className="relative isolate min-h-[calc(100svh-4rem)] overflow-hidden bg-secondary">
-      <div aria-hidden="true" className="pointer-events-none absolute -right-32 top-24 z-0 flex size-[23rem] items-center justify-center rounded-full border border-accent/15 sm:hidden">
-        <div className="flex size-[18rem] items-center justify-center rounded-full border border-accent/15">
-          <span className="-mt-4 font-display text-[15rem] leading-none text-primary/[0.035]">L</span>
-        </div>
-        <span className="absolute left-10 top-12 size-2 rounded-full bg-accent/40" />
+    <section className="relative isolate overflow-hidden bg-secondary">
+      {/* Stationery frame: a hairline border broken by the logo's star. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-3 z-0 border border-accent/35 sm:inset-5">
+        <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-secondary px-3 text-accent">
+          <Sparkle className="size-4" />
+        </span>
       </div>
-      <div className="absolute inset-y-0 right-0 z-0 hidden w-1/2 sm:block lg:w-[56%]">
-        <Image
-          src="/editorial/hero-matched.png"
-          alt=""
-          fill
-          priority
-          sizes="(max-width: 1024px) 50vw, 56vw"
-          aria-hidden="true"
-          className="hero-image object-cover object-[42%_center] lg:object-[72%_center]"
-        />
-      </div>
-      <div className="absolute inset-y-0 left-0 z-[1] hidden w-[58%] bg-gradient-to-r from-secondary via-secondary/95 to-secondary/0 sm:block lg:w-[62%]" />
-      <div className="absolute inset-x-0 bottom-0 z-[1] h-32 bg-gradient-to-t from-secondary/45 to-transparent lg:hidden" />
-      <div className="relative z-10 mx-auto grid min-h-[calc(100svh-4rem)] max-w-7xl items-center gap-6 px-3 py-6 sm:px-6 sm:py-8 lg:grid-cols-2 lg:gap-8 lg:px-8 lg:py-10">
-        <div className="order-1 w-full -translate-y-3 sm:w-[58%] lg:order-1 lg:w-auto lg:-translate-y-6">
-          <p className="reveal is-visible flex items-center gap-3 text-xs uppercase tracking-luche text-accent">
-            <span className="h-px w-8 bg-accent" />
-            Hair & Beauty Studio
-          </p>
-          <h1 className="mt-5 max-w-none text-balance font-display text-[clamp(3.25rem,12vw,4rem)] font-medium leading-[1.02] text-primary drop-shadow-[0_1px_8px_rgba(255,255,255,0.18)] sm:max-w-[11ch] sm:text-6xl lg:mt-6 lg:text-7xl lg:text-foreground">
+
+      <div className="relative z-10 mx-auto grid min-h-[calc(100svh-4rem)] max-w-7xl items-center gap-10 px-8 py-14 sm:px-14 lg:grid-cols-[1.02fr_0.98fr] lg:gap-10 lg:px-20 lg:py-20">
+        <HeroMedallion className="lg:order-last" />
+
+        <div className="text-center lg:text-left">
+          <h1 className="text-balance font-display text-[clamp(3.1rem,9.5vw,6.25rem)] font-medium leading-[0.98] tracking-[-0.015em] text-primary">
             Your crown,
             <br />
             perfected.
           </h1>
-          <p className="mt-5 max-w-none text-pretty text-base font-normal leading-relaxed text-primary/85 drop-shadow-[0_1px_6px_rgba(255,255,255,0.16)] sm:max-w-[24ch] sm:text-lg lg:mt-6 lg:text-foreground/75">
-            Premium braiding hair, hair care essentials, accessories and styling tools — everything you
-            need for healthy, beautiful hair.
+          <p className="mx-auto mt-6 max-w-[36ch] text-pretty text-base leading-relaxed text-foreground/75 sm:text-lg lg:mx-0">
+            Premium braiding hair, hair care essentials, accessories and styling tools, plus expert styling in the studio.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:justify-center lg:justify-start">
             <Button
               render={<Link href="/shop" />}
               size="lg"
-              className="rounded-full py-6 px-5 shadow-sm shadow-primary/10 hover:-translate-y-0.5 hover:shadow-md"
+              className="h-12 rounded-full bg-primary px-8 text-[0.95rem] tracking-[0.03em] hover:bg-accent hover:text-accent-foreground"
             >
               Shop the collection
-              <ArrowRight className="size-4 transition-transform group-hover/button:translate-x-0.5" />
             </Button>
             <Button
               render={<Link href="/booking" />}
               size="lg"
               variant="outline"
-              className="rounded-full py-6 border-primary/20 bg-secondary/45 px-5 shadow-sm backdrop-blur-sm hover:-translate-y-0.5 hover:border-accent hover:bg-secondary/70"
+              className="h-12 rounded-full border-accent/60 bg-transparent px-8 text-[0.95rem] tracking-[0.03em] text-primary hover:border-accent hover:bg-accent/10"
             >
               Book an appointment
             </Button>
           </div>
-          <dl className="mt-12 grid max-w-md grid-cols-3 gap-6 border-t border-border pt-8">
-            <div>
-              <dt className="font-display text-3xl text-foreground">100%</dt>
-              <dd className="mt-1 text-xs uppercase tracking-wide-sm text-muted-foreground">
-                Premium Kanekalon
-              </dd>
-            </div>
-            <div>
-              <dt className="font-display text-3xl text-foreground">6k+</dt>
-              <dd className="mt-1 text-xs uppercase tracking-wide-sm text-muted-foreground">
-                Crowns styled
-              </dd>
-            </div>
-            <div>
-              <dt className="font-display text-3xl text-foreground">4.9</dt>
-              <dd className="mt-1 text-xs uppercase tracking-wide-sm text-muted-foreground">
-                Average rating
-              </dd>
-            </div>
-          </dl>
-        </div>
 
+          <p className="mx-auto mt-9 flex max-w-sm items-center justify-center gap-2.5 border-t border-accent/30 pt-5 text-sm text-muted-foreground lg:mx-0 lg:justify-start">
+            <Sparkle className="size-3 text-accent" />
+            Delivery within Sydney: flat {SYDNEY_FLAT_FEE_LABEL}
+          </p>
+        </div>
       </div>
     </section>
   )

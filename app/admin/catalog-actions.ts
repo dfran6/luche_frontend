@@ -49,6 +49,7 @@ export async function saveProduct(formData: FormData) {
   })) : []
   const variants = hasVariants ? (catalog.combinations ?? []).map((combo: any) => ({
     sku: combo.sku || undefined, price_delta: Number(combo.priceDelta || 0) / 100, stock_quantity: Number(combo.stockQuantity), is_active: true,
+    image: combo.image || null,
     selections: Object.fromEntries(options.map((option: any, index: number) => {
       const selectedId = String(combo.selections[catalog.options[index].id])
       const selected = catalog.options[index].variants.find((value: any) => String(value.id) === selectedId)
@@ -68,13 +69,35 @@ export async function saveProduct(formData: FormData) {
   }
   if (!body.name || !body.slug || !Number.isFinite(body.price)) throw new Error('Enter a name, slug, and valid price.')
   const file = fileField(formData)
+  let savedProduct: any
   if (id) {
     const patch: any = { name: body.name, slug: body.slug, category: body.category, price: body.price, short_description: description, description, details, tags, featured: body.featured, best_seller: body.best_seller, option_groups: options, variants, ...(!hasVariants ? { stock_quantity: body.stock_quantity } : {}) }
-    await request(`/products/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
+    savedProduct = await request(`/products/${id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(patch) })
     if (file) { const upload = new FormData(); upload.set('file', file); await request(`/products/${id}/image`, { method: 'POST', body: upload }) }
   } else {
     const multipart = new FormData(); multipart.set('data', JSON.stringify(body)); if (file) multipart.set('file', file)
-    await request('/products/', { method: 'POST', body: multipart })
+    savedProduct = await request('/products/', { method: 'POST', body: multipart })
+  }
+  if (hasVariants && savedProduct?.id) {
+    for (const combo of catalog.combinations ?? []) {
+      const variantFile = formData.get(`variantImage:${combo.key}`)
+      if (!(variantFile instanceof File) || !variantFile.size) continue
+      const wantedLabels = catalog.options.map((option: any) => {
+        const selectedId = String(combo.selections[option.id])
+        return option.variants.find((value: any) => String(value.id) === selectedId)?.label
+      })
+      const savedVariant = (savedProduct.variants ?? []).find((variant: any) => {
+        return catalog.options.every((option: any, index: number) => {
+          const group = (savedProduct.option_groups ?? []).find((item: any) => item.name === String(option.name).trim())
+          const valueId = group ? variant.selections?.[group.id] : null
+          return group?.values?.find((value: any) => value.id === valueId)?.label === wantedLabels[index]
+        })
+      })
+      if (!savedVariant) throw new Error(`Could not match the image to variant “${combo.label || combo.key}”.`)
+      const upload = new FormData()
+      upload.set('file', variantFile)
+      await request(`/products/${savedProduct.id}/variants/${savedVariant.id}/image`, { method: 'POST', body: upload })
+    }
   }
   revalidateCatalog()
 }

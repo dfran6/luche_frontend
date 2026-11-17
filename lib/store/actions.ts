@@ -1,15 +1,6 @@
 'use server'
 
-import { revalidatePath } from 'next/cache'
-import {
-  updateOrderStatus,
-  updateAppointmentStatus,
-} from '@/lib/store/db'
-import type {
-  AppointmentStatus,
-  CartLine,
-  OrderStatus,
-} from '@/lib/types'
+import type { CartLine } from '@/lib/types'
 
 export type CheckoutResult =
   | { ok: true; orderNumber: string; productTotalCents: number; items: { product_name: string; variant_label?: string | null; quantity: number; unit_price: string }[] }
@@ -24,7 +15,9 @@ export async function placeOrder(
     name: string
     email: string
     phone: string
-    shippingAddress: { line1: string; line2?: string; city: string; province: string; postalCode: string }
+    shippingAddress?: { line1: string; line2?: string; city: string; province: string; postalCode: string }
+    deliveryMethod: 'sydney' | 'outside' | 'pickup'
+    marketingConsent: boolean
   },
   lines: Pick<CartLine, 'slug' | 'combinationId' | 'variantLabel' | 'quantity'>[],
 ): Promise<CheckoutResult> {
@@ -48,14 +41,16 @@ export async function placeOrder(
         customer_name: name,
         email,
         phone,
-        shipping_address: {
+        delivery_method: customer.deliveryMethod,
+        marketing_consent: customer.marketingConsent,
+        shipping_address: customer.shippingAddress ? {
           line1: customer.shippingAddress.line1,
           line2: customer.shippingAddress.line2 || null,
           city: customer.shippingAddress.city,
           province: customer.shippingAddress.province,
           postal_code: customer.shippingAddress.postalCode,
           country: 'CA',
-        },
+        } : null,
         items: lines.map((line) => ({
           product_slug: line.slug,
           combination_id: line.combinationId || null,
@@ -117,6 +112,42 @@ export async function getAvailableAppointmentTimes(serviceId: string, date: stri
   }
 }
 
+export type ProductReviewResult = { ok: true } | { ok: false; error: string }
+
+export async function submitProductReview(
+  productId: string,
+  review: { name: string; email: string; rating: number; comment: string },
+): Promise<ProductReviewResult> {
+  const name = review.name.trim()
+  const email = review.email.trim()
+  if (!productId || !name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { ok: false, error: 'Enter your name and a valid email address.' }
+  }
+  if (!Number.isInteger(review.rating) || review.rating < 1 || review.rating > 5) {
+    return { ok: false, error: 'Choose a rating from 1 to 5 stars.' }
+  }
+
+  const apiBase = (process.env.BACKEND_API_URL || 'http://localhost:8000/api/v1').replace(/\/$/, '')
+  try {
+    const response = await fetch(`${apiBase}/products/${encodeURIComponent(productId)}/reviews`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+      body: JSON.stringify({
+        customer_name: name,
+        email,
+        rating: review.rating,
+        comment: review.comment.trim() || null,
+      }),
+    })
+    if (response.ok) return { ok: true }
+    const payload = await response.json().catch(() => ({}))
+    return { ok: false, error: typeof payload.detail === 'string' ? payload.detail : 'Could not submit your review.' }
+  } catch {
+    return { ok: false, error: 'Could not reach the review service. Please try again.' }
+  }
+}
+
 export type BookingResult =
   | { ok: true; appointmentId: string; checkoutUrl?: string }
   | { ok: false; error: string }
@@ -129,6 +160,7 @@ export async function bookAppointment(input: {
   date: string
   time: string
   notes?: string
+  marketingConsent: boolean
 }): Promise<BookingResult> {
   const name = input.name?.trim()
   const email = input.email?.trim()
@@ -160,6 +192,7 @@ export async function bookAppointment(input: {
         appointment_date: input.date,
         appointment_time: input.time,
         notes: input.notes?.trim() || null,
+        marketing_consent: input.marketingConsent,
       }),
     })
     const result = await response.json()
@@ -170,14 +203,3 @@ export async function bookAppointment(input: {
   }
 }
 
-export async function setOrderStatus(id: string, status: OrderStatus) {
-  updateOrderStatus(id, status)
-  revalidatePath('/admin')
-  revalidatePath('/admin/orders')
-}
-
-export async function setAppointmentStatus(id: string, status: AppointmentStatus) {
-  updateAppointmentStatus(id, status)
-  revalidatePath('/admin')
-  revalidatePath('/admin/appointments')
-}

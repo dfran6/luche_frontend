@@ -7,10 +7,12 @@ import { Button } from '@/components/ui/button'
 import { useCart } from '@/lib/cart/cart-context'
 import { formatPrice } from '@/lib/format'
 import { CATEGORY_LABELS } from '@/lib/data/catalog-constants'
+import type { ProductReview } from '@/lib/data/products'
+import { ProductReviews } from '@/components/shop/product-reviews'
 import type { Product } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
-export function ProductDetail({ product }: { product: Product }) {
+export function ProductDetail({ product, reviews }: { product: Product; reviews: ProductReview[] }) {
   const { add } = useCart()
   const [quantity, setQuantity] = useState(1)
   const [selected, setSelected] = useState<Record<string, string>>(() => {
@@ -34,10 +36,11 @@ export function ProductDetail({ product }: { product: Product }) {
     }
   }, [product, selected, selectedCombination, quantity])
   return (
+    <div className="space-y-14">
     <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
       <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-border bg-secondary">
         <Image
-          src={product.image || '/placeholder.svg'}
+          src={selectedCombination?.image || product.image || '/placeholder.svg'}
           alt={product.name}
           fill
           sizes="(min-width: 1024px) 45vw, 100vw"
@@ -151,7 +154,7 @@ export function ProductDetail({ product }: { product: Product }) {
                 combinationId: selectedCombination?.id,
                 slug: product.slug,
                 name: product.name,
-                image: product.image,
+                image: selectedCombination?.image || product.image,
                 unitPrice,
                 quantity,
                 variantLabel,
@@ -172,6 +175,8 @@ export function ProductDetail({ product }: { product: Product }) {
           ))}
         </ul>
       </div>
+    </div>
+    <ProductReviews productId={product.id} reviews={reviews} />
     </div>
   )
 }

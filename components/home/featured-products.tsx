@@ -34,7 +34,7 @@ export async function FeaturedProducts() {
 
         <div className="mt-10 sm:hidden">
           <Button render={<Link href="/shop" />} variant="outline" className="w-full rounded-full border-primary/20 px-5 hover:border-accent">
-            Shop all products
+            Shop all
           </Button>
         </div>
       </div>

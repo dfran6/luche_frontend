@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
 import Link from 'next/link'
-import { LayoutDashboard, ShoppingBag, CalendarCheck, Store, Package, Scissors } from 'lucide-react'
+import { LayoutDashboard, ShoppingBag, CalendarCheck, Store, Package, Scissors, Star } from 'lucide-react'
 import { Logo } from '@/components/logo'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { logoutAdmin } from '@/app/login/actions'
+import { AdminMobileNav } from '@/components/admin/admin-mobile-nav'
 
 const NAV = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -12,6 +13,7 @@ const NAV = [
   { href: '/admin/appointments', label: 'Appointments', icon: CalendarCheck },
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/services', label: 'Services', icon: Scissors },
+  { href: '/admin/reviews', label: 'Reviews', icon: Star },
 ]
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
@@ -54,20 +56,14 @@ export default async function AdminLayout({ children }: { children: ReactNode })
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between border-b border-border bg-card px-4 py-4 lg:hidden">
-          <Logo />
-          <nav className="flex gap-1">
-            {NAV.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                aria-label={item.label}
-                className="flex size-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-              >
-                <item.icon className="size-4" />
-              </Link>
-            ))}
-          </nav>
+        <header className="sticky top-0 z-30 border-b border-border bg-card px-4 pt-3 lg:hidden">
+          <div className="flex items-center justify-between gap-3 pb-2">
+            <Logo size={32} />
+            <form action={logoutAdmin}>
+              <button className="h-10 rounded-full px-4 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground">Sign out</button>
+            </form>
+          </div>
+          <AdminMobileNav />
         </header>
         <main className="flex-1 p-4 sm:p-6 lg:p-8">{children}</main>
       </div>

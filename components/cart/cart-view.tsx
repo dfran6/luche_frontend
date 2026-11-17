@@ -6,6 +6,7 @@ import { Minus, Plus, Trash2, ShoppingBag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/lib/cart/cart-context'
 import { formatPrice } from '@/lib/format'
+import { DeliveryPolicy } from '@/components/delivery-policy'
 
 export function CartView() {
   const { lines, subtotal, setQty, remove } = useCart()
@@ -20,8 +21,8 @@ export function CartView() {
         <p className="mt-2 max-w-sm text-pretty text-muted-foreground">
           Discover premium braiding hair, care and accessories curated by our stylists.
         </p>
-        <Button render={<Link href="/shop" />} className="mt-6">
-          Start shopping
+        <Button render={<Link href="/shop" />} size="lg" className="mt-6 rounded-full px-6">
+          Shop the collection
         </Button>
       </div>
     )
@@ -99,20 +100,16 @@ export function CartView() {
       <aside className="h-fit rounded-2xl border border-border bg-card p-6 lg:sticky lg:top-24">
         <h2 className="font-display text-xl text-foreground">Order summary</h2>
         <dl className="mt-5 space-y-3 text-sm">
-          <div className="flex justify-between">
+          <div className="flex items-baseline justify-between">
             <dt className="text-muted-foreground">Subtotal</dt>
-            <dd className="font-medium text-foreground">{formatPrice(subtotal)}</dd>
-          </div>
-          <div className="flex justify-between border-t border-border pt-3">
-            <dt className="font-medium text-foreground">Subtotal</dt>
-            <dd className="font-display text-lg text-foreground">{formatPrice(subtotal)}</dd>
+            <dd className="font-display text-xl text-foreground">{formatPrice(subtotal)}</dd>
           </div>
         </dl>
-        <p className="mt-3 text-xs text-muted-foreground">Delivery cost and taxes will be confirmed on WhatsApp.</p>
-        <Button render={<Link href="/checkout" />} size="lg" className="mt-6 w-full">
-          Continue to order details
+        <DeliveryPolicy className="mt-4 border-t border-border pt-4" />
+        <Button render={<Link href="/checkout" />} size="lg" className="mt-6 w-full rounded-full">
+          Checkout
         </Button>
-        <Button render={<Link href="/shop" />} variant="ghost" className="mt-2 w-full">
+        <Button render={<Link href="/shop" />} variant="ghost" className="mt-2 h-10 w-full">
           Continue shopping
         </Button>
       </aside>

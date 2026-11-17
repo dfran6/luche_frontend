@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Check, ArrowRight } from 'lucide-react'
-import { getProductBySlug } from '@/lib/data/products'
+import { getStudioFavourite } from '@/lib/data/products'
 import { formatPrice } from '@/lib/format'
 import { Reveal } from '@/components/reveal'
 import { Button } from '@/components/ui/button'
 
 export async function Spotlight() {
-  const product = await getProductBySlug('xpression-pre-stretched-ultra-braid-52')
+  const product = await getStudioFavourite()
   if (!product) return null
 
   return (

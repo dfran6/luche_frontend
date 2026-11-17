@@ -1,10 +1,12 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { useEffect, useState, useTransition, type ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { SparkleDivider } from '@/components/brand/sparkle'
+import { MarketingConsent } from '@/components/booking/marketing-consent'
 import { bookAppointment, getAvailableAppointmentTimes } from '@/lib/store/actions'
 import { formatPrice, formatDuration } from '@/lib/format'
 import type { Service } from '@/lib/types'
@@ -13,9 +15,12 @@ import { whatsappServiceUrl } from '@/lib/whatsapp'
 export function BookingForm({
   services,
   initialServiceId,
+  header,
 }: {
   services: Service[]
   initialServiceId?: string
+  /** The page heading; hidden once the receipt is shown. */
+  header?: ReactNode
 }) {
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
@@ -55,18 +60,32 @@ export function BookingForm({
   }, [serviceId, date])
 
   if (receipt) {
-    return <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card px-6 py-10">
-      <div className="text-center"><p className="text-xs uppercase tracking-widest text-muted-foreground">LUCHE · Appointment receipt</p><h2 className="mt-2 font-display text-2xl">Request received</h2><p className="mt-2 text-sm text-muted-foreground">Reference {receipt.id}</p></div>
-      <dl className="mt-7 space-y-3 border-y border-border py-5 text-sm">
-        <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Customer</dt><dd>{receipt.name}</dd></div>
-        <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Email</dt><dd>{receipt.email}</dd></div>
-        <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Service</dt><dd>{receipt.service}</dd></div>
-        <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Requested time</dt><dd>{receipt.date} at {receipt.time}</dd></div>
-        <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Listed price</dt><dd>{formatPrice(receipt.price)}</dd></div>
-      </dl>
-      <p className="mt-4 text-center text-sm text-muted-foreground">This is a request, not a confirmed appointment. We&apos;ll email this receipt. Confirm availability and final pricing with us on WhatsApp.</p>
-      {whatsappLink ? <div className="text-center"><a href={whatsappLink} target="_blank" rel="noreferrer" className="mt-5 inline-flex rounded-md bg-primary px-5 py-3 text-sm font-medium text-primary-foreground">Continue on WhatsApp</a></div> : null}
-    </div>
+    return (
+      <div className="mx-auto max-w-xl rounded-2xl border border-border bg-card px-5 py-10 sm:px-8 sm:py-12">
+        <div className="text-center">
+          <SparkleDivider />
+          <h2 className="mt-5 font-display text-3xl text-foreground">Request received</h2>
+          <p className="mt-2 text-sm text-muted-foreground">Reference {receipt.id}</p>
+        </div>
+        <dl className="mt-7 space-y-3 border-y border-border py-5 text-sm">
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Customer</dt><dd className="text-right">{receipt.name}</dd></div>
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Email</dt><dd className="break-all text-right">{receipt.email}</dd></div>
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Service</dt><dd className="text-right">{receipt.service}</dd></div>
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Requested time</dt><dd className="text-right">{receipt.date} at {receipt.time}</dd></div>
+          <div className="flex justify-between gap-4"><dt className="text-muted-foreground">Starting price</dt><dd>{formatPrice(receipt.price)}</dd></div>
+        </dl>
+        <p className="mt-5 text-center text-sm leading-relaxed text-muted-foreground">
+          This is a request, not a confirmed appointment. We&apos;ll email you a copy of this receipt. Message us on WhatsApp to confirm availability and the final price.
+        </p>
+        {whatsappLink ? (
+          <div className="mt-5 flex justify-center">
+            <Button render={<a href={whatsappLink} target="_blank" rel="noreferrer" />} size="lg" className="w-full rounded-full sm:w-auto sm:px-8">
+              Confirm on WhatsApp
+            </Button>
+          </div>
+        ) : null}
+      </div>
+    )
   }
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -83,6 +102,7 @@ export function BookingForm({
         date: String(form.get('date') ?? ''),
         time: String(form.get('time') ?? ''),
         notes: String(form.get('notes') ?? ''),
+        marketingConsent: form.get('marketing_consent') === 'on',
       })
       if (result.ok) {
         const message = `Hello LUCHE, I requested an appointment.\nReference: ${result.appointmentId}\nService: ${selected?.name ?? ''}\nDate: ${String(form.get('date') ?? '')}\nTime: ${String(form.get('time') ?? '')}\nName: ${String(form.get('name') ?? '')}\nPhone: ${String(form.get('phone') ?? '')}\nEmail: ${String(form.get('email') ?? '')}\nNotes: ${String(form.get('notes') ?? '')}`
@@ -101,7 +121,9 @@ export function BookingForm({
   }
 
   return (
-    <form onSubmit={onSubmit} className="grid gap-10 lg:grid-cols-[1fr_320px]">
+    <>
+    {header}
+    <form onSubmit={onSubmit} className="grid gap-10 lg:grid-cols-[1fr_340px] lg:gap-14">
       <div className="space-y-6">
         <div>
           <Label htmlFor="serviceId">Service</Label>
@@ -110,11 +132,11 @@ export function BookingForm({
             name="serviceId"
             value={serviceId}
             onChange={(e) => setServiceId(e.target.value)}
-            className="mt-1.5 w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
+            className="mt-2 h-11 w-full rounded-lg border border-input bg-card px-3 text-base text-foreground outline-none focus:ring-2 focus:ring-ring md:h-10 md:text-sm"
           >
             {services.map((s) => (
               <option key={s.id} value={s.id}>
-                {s.name} — from {formatPrice(s.price)}
+                {s.name} (from {formatPrice(s.price)})
               </option>
             ))}
           </select>
@@ -123,19 +145,19 @@ export function BookingForm({
         <div className="grid gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="name">Full name</Label>
-            <Input id="name" name="name" required autoComplete="name" className="mt-1.5" />
+            <Input id="name" name="name" required autoComplete="name" className="mt-2" />
           </div>
           <div>
             <Label htmlFor="phone">Phone</Label>
-            <Input id="phone" name="phone" type="tel" required autoComplete="tel" className="mt-1.5" />
+            <Input id="phone" name="phone" type="tel" required autoComplete="tel" className="mt-2" />
           </div>
           <div className="sm:col-span-2">
             <Label htmlFor="email">Email</Label>
-            <Input id="email" name="email" type="email" required autoComplete="email" className="mt-1.5" />
+            <Input id="email" name="email" type="email" required autoComplete="email" className="mt-2" />
           </div>
           <div>
             <Label htmlFor="date">Preferred date</Label>
-            <Input id="date" name="date" type="date" required min={today} value={date} onChange={(e) => setDate(e.target.value)} className="mt-1.5" />
+            <Input id="date" name="date" type="date" required min={today} value={date} onChange={(e) => setDate(e.target.value)} className="mt-2" />
           </div>
           <div>
             <Label htmlFor="time">Preferred time</Label>
@@ -146,7 +168,7 @@ export function BookingForm({
               value={time}
               onChange={(e) => setTime(e.target.value)}
               disabled={loadingTimes || !times.length}
-              className="mt-1.5 w-full rounded-md border border-border bg-card px-3 py-2.5 text-sm text-foreground outline-none focus:ring-2 focus:ring-ring"
+              className="mt-2 h-11 w-full rounded-lg border border-input bg-card px-3 text-base text-foreground outline-none focus:ring-2 focus:ring-ring disabled:opacity-60 md:h-10 md:text-sm"
             >
               <option value="" disabled>
                 Select a time
@@ -157,7 +179,7 @@ export function BookingForm({
                 </option>
               ))}
             </select>
-            <p className="mt-1 text-xs text-muted-foreground">{loadingTimes ? 'Loading available times...' : date && !times.length ? 'No times available for this date.' : 'Choose a date to see available times.'}</p>
+            <p className="mt-2 text-xs text-muted-foreground">{loadingTimes ? 'Loading available times…' : date && !times.length ? 'No times available on this date. Try another day.' : 'Pick a date to see available times.'}</p>
           </div>
         </div>
 
@@ -168,21 +190,26 @@ export function BookingForm({
             name="notes"
             rows={4}
             placeholder="Desired length, size, colour or any questions…"
-            className="mt-1.5"
+            className="mt-2"
           />
         </div>
+
+        <MarketingConsent />
 
         {error ? (
           <p className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
         ) : null}
 
-        <Button type="submit" size="lg" disabled={isPending}>
-          {isPending ? 'Sending request…' : 'Request appointment on WhatsApp'}
+        <Button type="submit" size="lg" className="w-full rounded-full sm:w-auto sm:px-8" disabled={isPending}>
+          {isPending ? 'Sending request…' : 'Request appointment'}
         </Button>
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          Your request is saved first. You then confirm the appointment with us on WhatsApp.
+        </p>
       </div>
 
-      <aside className="h-fit rounded-2xl border border-border bg-card p-6 lg:sticky lg:top-24">
-        <h2 className="font-display text-xl text-foreground">Booking summary</h2>
+      <aside className="h-fit rounded-2xl border border-border bg-card p-5 sm:p-6 lg:sticky lg:top-24">
+        <h2 className="font-display text-2xl text-foreground">Booking summary</h2>
         {selected ? (
           <div className="mt-4 space-y-3 text-sm">
             <div className="flex justify-between">
@@ -190,7 +217,7 @@ export function BookingForm({
               <span className="text-right font-medium text-foreground">{selected.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-muted-foreground">From</span>
+              <span className="text-muted-foreground">Starting price</span>
               <span className="font-medium text-foreground">{formatPrice(selected.price)}</span>
             </div>
             <div className="flex justify-between">
@@ -200,11 +227,12 @@ export function BookingForm({
               </span>
             </div>
             <p className="border-t border-border pt-3 text-xs text-muted-foreground">
-              We&apos;ll confirm the appointment and final price with you on WhatsApp.
+              We&apos;ll confirm your appointment and the final price on WhatsApp.
             </p>
           </div>
         ) : null}
       </aside>
     </form>
+    </>
   )
 }

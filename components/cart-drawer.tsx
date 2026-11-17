@@ -13,6 +13,7 @@ import {
   SheetFooter,
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
+import { DeliveryPolicy } from '@/components/delivery-policy'
 
 export function CartDrawer() {
   const { lines, isOpen, setOpen, subtotal, count, setQty, remove } = useCart()
@@ -37,7 +38,7 @@ export function CartDrawer() {
                 Discover premium braiding hair and care essentials.
               </p>
             </div>
-            <Button render={<Link href="/shop" />} onClick={() => setOpen(false)}>
+            <Button render={<Link href="/shop" />} size="lg" className="rounded-full px-6" onClick={() => setOpen(false)}>
               Shop the collection
             </Button>
           </div>
@@ -110,18 +111,18 @@ export function CartDrawer() {
                 <span className="text-sm text-muted-foreground">Subtotal</span>
                 <span className="font-display text-xl">{formatPrice(subtotal)}</span>
               </div>
-              <p className="mb-3 text-xs text-muted-foreground">Add your contact details to create the order and continue in WhatsApp.</p>
+              <DeliveryPolicy className="mb-3" />
               <Button
                 render={<Link href="/checkout" />}
                 size="lg"
-                className="w-full"
+                className="w-full rounded-full"
                 onClick={() => setOpen(false)}
               >
-                Continue to order details
+                Checkout
               </Button>
               <Button
                 variant="ghost"
-                className="w-full"
+                className="h-10 w-full"
                 onClick={() => setOpen(false)}
               >
                 Continue shopping

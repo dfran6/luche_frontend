@@ -68,3 +68,22 @@ export async function refundAppointment(id: string) {
   if (result.ok) { revalidatePath('/admin/appointments'); revalidatePath('/admin') }
   return result
 }
+
+export async function approveProductReview(id: string) {
+  const result = await adminRequest(`/products/reviews/${id}`, 'PATCH', { is_approved: true })
+  if (result.ok) {
+    revalidatePath('/admin/reviews')
+    revalidatePath('/admin/products')
+    revalidatePath('/shop/[slug]', 'page')
+  }
+  return result
+}
+
+export async function deleteProductReview(id: string) {
+  const result = await adminRequest(`/products/reviews/${id}`, 'DELETE')
+  if (result.ok) {
+    revalidatePath('/admin/reviews')
+    revalidatePath('/admin/products')
+  }
+  return result
+}

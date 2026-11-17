@@ -25,6 +25,7 @@ export type ProductCombination = {
   /** Price adjustment in cents for this combination. */
   priceDelta: number
   sku?: string
+  image?: string
 }
 
 export type Product = {

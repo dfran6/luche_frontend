@@ -4,6 +4,7 @@ import { CATEGORY_LABELS } from '@/lib/data/catalog-constants'
 import type { ProductCategory } from '@/lib/types'
 import { ShopGrid } from '@/components/shop/shop-grid'
 import { Reveal } from '@/components/reveal'
+import { SYDNEY_FLAT_FEE_LABEL } from '@/lib/delivery'
 
 export const metadata: Metadata = {
   title: 'Shop — Luché Hair & Beauty Studio',
@@ -33,8 +34,8 @@ export default async function ShopPage({
           Premium hair &amp; studio essentials
         </h1>
         <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-muted-foreground">
-          Salon-grade braiding hair, extensions and the care products our stylists trust —
-          delivered to your door.
+          Salon-grade braiding hair, extensions and the care products our stylists trust.
+          Delivery within Sydney is a flat {SYDNEY_FLAT_FEE_LABEL}. Outside Sydney, you pay the actual shipping cost.
         </p>
       </Reveal>
 

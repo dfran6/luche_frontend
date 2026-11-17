@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react'
 import {
   getAllProducts,
   getProductBySlug,
+  getProductReviews,
   getRelatedProducts,
 } from '@/lib/data/products'
 import { ProductDetail } from '@/components/shop/product-detail'
@@ -38,7 +39,10 @@ export default async function ProductPage({
   const product = await getProductBySlug(slug)
   if (!product) notFound()
 
-  const related = await getRelatedProducts(product, 4)
+  const [related, reviews] = await Promise.all([
+    getRelatedProducts(product, 4),
+    getProductReviews(product.id),
+  ])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
@@ -58,7 +62,7 @@ export default async function ProductPage({
       </nav>
 
       <div className="mt-8">
-        <ProductDetail product={product} />
+        <ProductDetail product={product} reviews={reviews} />
       </div>
 
       {related.length > 0 && (

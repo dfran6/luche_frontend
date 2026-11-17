@@ -1,15 +1,26 @@
 import type { Metadata } from 'next'
 import { CheckoutForm } from '@/components/checkout/checkout-form'
+import { SparkleDivider } from '@/components/brand/sparkle'
 
 export const metadata: Metadata = {
-  title: 'Order details — Luché',
-  description: 'Confirm your order details and continue to WhatsApp.',
+  title: 'Checkout — Luché',
+  description: 'Place your order, then confirm delivery, taxes and payment with Luché on WhatsApp.',
 }
 
 export default function CheckoutPage() {
-  return <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-    <h1 className="font-display text-4xl text-foreground sm:text-5xl">Order details</h1>
-    <p className="mt-3 text-sm text-muted-foreground">Add your contact details to save your order and continue in WhatsApp.</p>
-    <div className="mt-10"><CheckoutForm /></div>
-  </div>
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <CheckoutForm
+        header={
+          <div className="mb-10">
+            <h1 className="text-balance font-display text-4xl text-foreground sm:text-5xl">Checkout</h1>
+            <SparkleDivider align="start" className="mt-4" />
+            <p className="mt-4 max-w-xl text-pretty text-muted-foreground">
+              Enter your details to place the order. You&apos;ll then confirm delivery, taxes and payment with us on WhatsApp.
+            </p>
+          </div>
+        }
+      />
+    </div>
+  )
 }
