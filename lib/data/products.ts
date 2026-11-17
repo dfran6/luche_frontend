@@ -77,7 +77,10 @@ export async function getProductAdminStats() {
 export async function getProductBySlug(slug: string) { return (await getAllProducts()).find((p) => p.slug === slug) }
 export async function getProductReviews(productId: string): Promise<ProductReview[]> {
   try {
-    const response = await fetch(`${API}/products/${encodeURIComponent(productId)}/reviews`, { cache: 'no-store' })
+    // Keep product detail pages compatible with static generation/ISR. A
+    // no-store review request makes Next switch this route to dynamic at
+    // runtime after it has already been generated as static.
+    const response = await fetch(`${API}/products/${encodeURIComponent(productId)}/reviews`, { next: { revalidate: 60 } })
     if (!response.ok) return []
     const reviews = await response.json()
     return Array.isArray(reviews) ? reviews : []

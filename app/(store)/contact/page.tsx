@@ -79,8 +79,8 @@ export default function ContactPage() {
               </li>
               <li className="flex gap-3">
                 <Phone className="mt-0.5 size-5 shrink-0 text-accent" />
-                <a href="tel:+14165550100" className="text-muted-foreground hover:text-foreground">
-                  +1 (416) 555-0100
+                <a href="tel:+1 9029792695" className="text-muted-foreground hover:text-foreground">
+                  +1 (902) 979-2695
                 </a>
               </li>
               <li className="flex gap-3">
