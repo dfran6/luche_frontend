@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { updateOrderStatus, updateAppointmentStatus } from '@/app/admin/record-actions'
@@ -84,20 +84,38 @@ export function AppointmentStatusControl({
   status: AppointmentStatus
 }) {
   const router = useRouter()
+  const [selectedStatus, setSelectedStatus] = useState(status)
   const [error, setError] = useState('')
   const [pending, startTransition] = useTransition()
+
+  useEffect(() => {
+    setSelectedStatus(status)
+  }, [status])
+
+  function handleStatusChange(value: string) {
+    const nextStatus = value as AppointmentStatus
+    const previousStatus = selectedStatus
+    setSelectedStatus(nextStatus)
+    setError('')
+
+    startTransition(async () => {
+      const result = await updateAppointmentStatus(id, nextStatus)
+      if (result.ok) {
+        toast.success(`Appointment ${nextStatus === 'cancelled' ? 'cancelled' : 'status updated'}.`)
+        router.refresh()
+      } else {
+        setSelectedStatus(previousStatus)
+        setError(result.error)
+        toast.error(result.error)
+      }
+    })
+  }
+
   return (
     <div>
     <Select
-      value={status}
-      onValueChange={(v) =>
-        startTransition(async () => {
-          setError('')
-          const result = await updateAppointmentStatus(id, v as AppointmentStatus)
-          if (result.ok) { toast.success('Appointment status updated.'); router.refresh() }
-          else { setError(result.error); toast.error(result.error) }
-        })
-      }
+      value={selectedStatus}
+      onValueChange={handleStatusChange}
     >
       <SelectTrigger
         className="h-8 w-[140px] text-xs capitalize"

@@ -47,7 +47,11 @@ export async function updateOrderTotals(id: string, deliveryFee: number, taxTota
 
 export async function updateAppointmentStatus(id: string, status: AppointmentStatus) {
   const result = await adminRequest(`/appointments/${id}/status`, 'PATCH', { status })
-  if (result.ok) { revalidatePath('/admin/appointments'); revalidatePath('/admin') }
+  if (result.ok) {
+    revalidatePath('/admin/appointments')
+    revalidatePath('/admin/services')
+    revalidatePath('/admin')
+  }
   return result
 }
 
