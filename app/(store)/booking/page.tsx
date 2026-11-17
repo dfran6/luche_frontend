@@ -5,8 +5,9 @@ import { SparkleDivider } from '@/components/brand/sparkle'
 import { getAllServices } from '@/lib/data/services'
 
 export const metadata: Metadata = {
-  title: 'Book an Appointment — Luché',
-  description: 'Request an appointment at Luché Hair & Beauty Studio.',
+  title: 'Book a Hair Appointment',
+  description: 'Choose a hair or beauty service and request an appointment with Luché Hair & Beauty Studio.',
+  alternates: { canonical: '/booking' },
 }
 
 function Header() {

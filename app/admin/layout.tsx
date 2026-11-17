@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { LayoutDashboard, ShoppingBag, CalendarCheck, Store, Package, Scissors, Star } from 'lucide-react'
 import { Logo } from '@/components/logo'
@@ -15,6 +16,11 @@ const NAV = [
   { href: '/admin/services', label: 'Services', icon: Scissors },
   { href: '/admin/reviews', label: 'Reviews', icon: Star },
 ]
+
+export const metadata: Metadata = {
+  title: 'Admin',
+  robots: { index: false, follow: false },
+}
 
 export default async function AdminLayout({ children }: { children: ReactNode }) {
   const token = (await cookies()).get('luche-admin-access')?.value

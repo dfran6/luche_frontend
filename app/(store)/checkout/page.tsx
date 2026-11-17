@@ -3,8 +3,9 @@ import { CheckoutForm } from '@/components/checkout/checkout-form'
 import { SparkleDivider } from '@/components/brand/sparkle'
 
 export const metadata: Metadata = {
-  title: 'Checkout — Luché',
+  title: 'Checkout',
   description: 'Place your order, then confirm delivery, taxes and payment with Luché on WhatsApp.',
+  robots: { index: false, follow: false },
 }
 
 export default function CheckoutPage() {

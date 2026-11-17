@@ -2,8 +2,9 @@ import type { Metadata } from 'next'
 import { CartView } from '@/components/cart/cart-view'
 
 export const metadata: Metadata = {
-  title: 'Your Bag — Luché',
+  title: 'Your Shopping Bag',
   description: 'Review the items in your Luché shopping bag.',
+  robots: { index: false, follow: false },
 }
 
 export default function CartPage() {

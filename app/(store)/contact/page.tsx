@@ -7,8 +7,9 @@ import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
 export const metadata: Metadata = {
-  title: 'Contact — Luché Hair & Beauty Studio',
-  description: 'Get in touch with Luché Hair & Beauty Studio. Visit us, call or send a message.',
+  title: 'Contact the Studio',
+  description: 'Contact Luché Hair & Beauty Studio about appointments, orders, hair products or styling services.',
+  alternates: { canonical: '/contact' },
 }
 
 const HOURS = [
@@ -27,8 +28,7 @@ export default function ContactPage() {
           We&apos;d love to hear from you
         </h1>
         <p className="mt-4 text-pretty leading-relaxed text-muted-foreground">
-          Questions about a style, an order or a product recommendation? Send us a message or drop
-          by the studio.
+          Questions about a style, an order or a product recommendation? Send us a message.
         </p>
       </Reveal>
 
@@ -73,8 +73,8 @@ export default function ContactPage() {
               <li className="flex gap-3">
                 <MapPin className="mt-0.5 size-5 shrink-0 text-accent" />
                 <span className="text-muted-foreground">
-                  128 Studio Lane, Suite 4<br />
-                  Toronto, ON M5V 2K7
+                  Sydney<br />
+                  Nova Scotia, Canada
                 </span>
               </li>
               <li className="flex gap-3">
@@ -86,10 +86,10 @@ export default function ContactPage() {
               <li className="flex gap-3">
                 <Mail className="mt-0.5 size-5 shrink-0 text-accent" />
                 <a
-                  href="mailto:hello@luche.studio"
+                  href="mailto:hello@luchehair.com"
                   className="text-muted-foreground hover:text-foreground"
                 >
-                  hello@luche.studio
+                  hello@luchehair.com
                 </a>
               </li>
             </ul>

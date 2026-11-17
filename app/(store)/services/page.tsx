@@ -8,9 +8,10 @@ import { Reveal } from '@/components/reveal'
 import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
-  title: 'Services — Luché Hair & Beauty Studio',
+  title: 'Hair Braiding & Beauty Services',
   description:
     'Braiding, weaves, cornrows, treatments and wig installs at Luché Hair & Beauty Studio. Book your appointment today.',
+  alternates: { canonical: '/services' },
 }
 
 export default async function ServicesPage() {

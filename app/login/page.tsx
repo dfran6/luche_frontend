@@ -1,8 +1,9 @@
 import { LoginForm } from '@/components/auth/login-form'
 
 export const metadata = {
-  title: 'Admin login | Luché Hair & Beauty Studio',
+  title: 'Admin Login',
   description: 'Sign in to manage Luché orders and appointments.',
+  robots: { index: false, follow: false },
 }
 
 export default function LoginPage() {

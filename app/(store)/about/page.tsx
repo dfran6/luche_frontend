@@ -5,9 +5,10 @@ import { Reveal } from '@/components/reveal'
 import { Button } from '@/components/ui/button'
 
 export const metadata: Metadata = {
-  title: 'About — Luché Hair & Beauty Studio',
+  title: 'About the Studio',
   description:
     'Luché is a hair and beauty studio and premium hair shop dedicated to healthy, beautiful, long-lasting styles.',
+  alternates: { canonical: '/about' },
 }
 
 const VALUES = [

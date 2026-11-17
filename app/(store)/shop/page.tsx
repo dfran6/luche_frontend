@@ -7,9 +7,10 @@ import { Reveal } from '@/components/reveal'
 import { SYDNEY_FLAT_FEE_LABEL } from '@/lib/delivery'
 
 export const metadata: Metadata = {
-  title: 'Shop — Luché Hair & Beauty Studio',
+  title: 'Shop Braiding Hair & Hair Care',
   description:
     'Shop premium braiding hair, extensions, hair care, tools and accessories from Luché.',
+  alternates: { canonical: '/shop' },
 }
 
 const VALID = Object.keys(CATEGORY_LABELS) as ProductCategory[]
